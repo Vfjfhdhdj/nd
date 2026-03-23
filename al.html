@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>AI Bạn Bé - Ultra Bypass</title>
+    <style>
+        body { font-family: sans-serif; background: #ddd; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        #app { width: 380px; height: 85vh; background: white; border-radius: 15px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
+        #header { padding: 12px; background: #0084ff; color: white; text-align: center; font-weight: bold; font-size: 14px; }
+        #logs { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; background: #f7f9fb; }
+        .msg { padding: 8px 12px; border-radius: 12px; font-size: 14px; max-width: 85%; word-wrap: break-word; }
+        .u { align-self: flex-end; background: #0084ff; color: white; }
+        .a { align-self: flex-start; background: white; border: 1px solid #ddd; }
+        #input-area { padding: 10px; display: flex; gap: 5px; border-top: 1px solid #eee; }
+        input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 20px; outline: none; }
+        button { border: none; background: #0084ff; color: white; padding: 8px 15px; border-radius: 20px; cursor: pointer; }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div id="header">AI BẠN BÉ (BYPASS CORS)</div>
+    <div id="logs"></div>
+    <div id="input-area">
+        <input type="text" id="inp" placeholder="Nhắn '1+1' thử..." onkeyup="if(event.key==='Enter') send()">
+        <button id="btn" onclick="send()">Gửi</button>
+    </div>
+</div>
+
+<script>
+    // NHỚ THAY KEY MỚI CỦA BẠN VÀO ĐÂY
+    const API_KEY = "AIzaSyBeuNbPJSBE5JNwCQs9od-hqX5oTuRdTUc"; 
+    
+    // Dùng Proxy để lách luật CORS của Google
+    const PROXY = "https://cors-anywhere.herokuapp.com/"; 
+    const TARGET = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+    
+    const logs = document.getElementById('logs');
+    const inp = document.getElementById('inp');
+
+    function add(txt, cls) {
+        const d = document.createElement('div');
+        d.className = `msg ${cls}`;
+        d.innerText = txt;
+        logs.appendChild(d);
+        logs.scrollTop = logs.scrollHeight;
+    }
+
+    async function send() {
+        const txt = inp.value.trim();
+        if(!txt) return;
+
+        add(txt, 'u');
+        inp.value = '';
+
+        try {
+            // Thử gửi trực tiếp trước, nếu lỗi thì báo
+            const response = await fetch(TARGET, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: "Xưng mình gọi bạn, trả lời cực ngắn: " + txt }] }]
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.candidates && data.candidates[0].content) {
+                add(data.candidates[0].content.parts[0].text, 'a');
+            } else {
+                console.error(data);
+                add("⚠️ Vẫn bị chặn. Bạn hãy thử Cách 2 bên dưới nhé!", 'a');
+            }
+        } catch (e) {
+            add("❌ Lỗi kết nối trình duyệt!", 'a');
+        }
+    }
+
+    window.onload = () => add("Nếu vẫn bị chặn, bạn hãy copy code này lên trang 'codepen.io' để chạy nhé! 😉", 'a');
+</script>
+</body>
+</html>
