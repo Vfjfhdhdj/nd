@@ -2,41 +2,40 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>AI Bạn Bé - Ultra Bypass</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chat Fix - New Key</title>
     <style>
-        body { font-family: sans-serif; background: #ddd; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
-        #app { width: 380px; height: 85vh; background: white; border-radius: 15px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
-        #header { padding: 12px; background: #0084ff; color: white; text-align: center; font-weight: bold; font-size: 14px; }
-        #logs { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; background: #f7f9fb; }
-        .msg { padding: 8px 12px; border-radius: 12px; font-size: 14px; max-width: 85%; word-wrap: break-word; }
-        .u { align-self: flex-end; background: #0084ff; color: white; }
-        .a { align-self: flex-start; background: white; border: 1px solid #ddd; }
-        #input-area { padding: 10px; display: flex; gap: 5px; border-top: 1px solid #eee; }
-        input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 20px; outline: none; }
-        button { border: none; background: #0084ff; color: white; padding: 8px 15px; border-radius: 20px; cursor: pointer; }
+        body { font-family: sans-serif; background: #f0f2f5; display: flex; justify-content: center; padding: 20px; margin: 0; }
+        #chat-container { width: 100%; max-width: 400px; background: white; border-radius: 15px; display: flex; flex-direction: column; height: 90vh; box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow: hidden; }
+        #header { background: #0084ff; color: white; padding: 15px; text-align: center; font-weight: bold; }
+        #logs { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #f7f9fb; }
+        .msg { padding: 10px 14px; border-radius: 18px; font-size: 14px; line-height: 1.4; max-width: 80%; word-wrap: break-word; }
+        .u { align-self: flex-end; background: #0084ff; color: white; border-bottom-right-radius: 2px; }
+        .a { align-self: flex-start; background: #e4e6eb; color: black; border-bottom-left-radius: 2px; white-space: pre-wrap; }
+        #input-area { padding: 12px; border-top: 1px solid #eee; display: flex; gap: 8px; background: white; }
+        input { flex: 1; padding: 10px 15px; border: 1px solid #ddd; border-radius: 25px; outline: none; font-size: 14px; }
+        button { background: #0084ff; color: white; border: none; padding: 10px 18px; border-radius: 25px; cursor: pointer; font-weight: bold; }
+        button:disabled { background: #ccc; }
     </style>
 </head>
 <body>
-<div id="app">
-    <div id="header">AI BẠN BÉ (BYPASS CORS)</div>
+<div id="chat-container">
+    <div id="header">AI BẠN BÉ (STABLE)</div>
     <div id="logs"></div>
     <div id="input-area">
-        <input type="text" id="inp" placeholder="Nhắn '1+1' thử..." onkeyup="if(event.key==='Enter') send()">
+        <input type="text" id="inp" placeholder="Hỏi 1+1 thử đi..." onkeyup="if(event.key==='Enter') send()">
         <button id="btn" onclick="send()">Gửi</button>
     </div>
 </div>
 
 <script>
-    // NHỚ THAY KEY MỚI CỦA BẠN VÀO ĐÂY
+    // ĐÃ GÁN KEY MỚI CỦA BẠN VÀO ĐÂY
     const API_KEY = "AIzaSyBeuNbPJSBE5JNwCQs9od-hqX5oTuRdTUc"; 
-    
-    // Dùng Proxy để lách luật CORS của Google
-    const PROXY = "https://cors-anywhere.herokuapp.com/"; 
-    const TARGET = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
-    
+    const URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+
     const logs = document.getElementById('logs');
     const inp = document.getElementById('inp');
+    const btn = document.getElementById('btn');
 
     function add(txt, cls) {
         const d = document.createElement('div');
@@ -52,10 +51,10 @@
 
         add(txt, 'u');
         inp.value = '';
+        btn.disabled = true;
 
         try {
-            // Thử gửi trực tiếp trước, nếu lỗi thì báo
-            const response = await fetch(TARGET, {
+            const r = await fetch(URL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -63,20 +62,22 @@
                 })
             });
 
-            const data = await response.json();
+            const data = await r.json();
+            btn.disabled = false;
 
             if (data.candidates && data.candidates[0].content) {
                 add(data.candidates[0].content.parts[0].text, 'a');
             } else {
-                console.error(data);
-                add("⚠️ Vẫn bị chặn. Bạn hãy thử Cách 2 bên dưới nhé!", 'a');
+                console.log("Lỗi:", data);
+                add("⚠️ Google phản hồi lỗi. Bạn thử hỏi câu khác nhé!", 'a');
             }
         } catch (e) {
-            add("❌ Lỗi kết nối trình duyệt!", 'a');
+            btn.disabled = false;
+            add("❌ Lỗi mạng hoặc Key chưa kích hoạt!", 'a');
         }
     }
 
-    window.onload = () => add("Nếu vẫn bị chặn, bạn hãy copy code này lên trang 'codepen.io' để chạy nhé! 😉", 'a');
+    window.onload = () => add("Key mới đã sẵn sàng! Bạn nhắn 'Chào' thử xem có được không? 😉", 'a');
 </script>
 </body>
 </html>
